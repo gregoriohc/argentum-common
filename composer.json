@@ -1,0 +1,21 @@
+{
+    "name": "gregoriohc/argentum",
+    "description": "Framework agnosting PHP billing library",
+    "license": "MIT",
+    "keywords": ["billing", "invoicing"],
+    "authors": [
+        {
+            "name": "Gregorio Hernandez Caso",
+            "email": "gregoriohc@gmail.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "4.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Gregoriohc\\Argentum\\": "src"
+        }
+    }
+}
