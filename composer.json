@@ -1,6 +1,6 @@
 {
     "name": "gregoriohc/argentum",
-    "description": "Framework agnosting PHP billing library",
+    "description": "Framework agnostic PHP billing library",
     "license": "MIT",
     "keywords": ["billing", "invoicing"],
     "authors": [
