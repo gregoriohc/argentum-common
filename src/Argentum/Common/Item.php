@@ -39,7 +39,7 @@ class Item extends Parametrized
      */
     public function __construct($parameters = null)
     {
-        $this->addParametersRequired(array('name', 'quantity', 'price'));
+        $this->addParametersRequired(array('name', 'price'));
 
         parent::__construct($parameters);
     }
