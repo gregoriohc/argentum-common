@@ -35,11 +35,6 @@ class Gateway extends AbstractGateway
 
     public function sign(array $parameters = array())
     {
-        return $this->createRequest('\Argentum\Offline\Message\PurchaseRequest', $parameters);
-    }
-
-    public function completePurchase(array $parameters = array())
-    {
-        return $this->createRequest('\Omnipay\PayFast\Message\CompletePurchaseRequest', $parameters);
+        return $this->createRequest('\Argentum\Offline\Message\SignRequest', $parameters);
     }
 }

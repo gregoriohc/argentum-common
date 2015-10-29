@@ -14,7 +14,7 @@ use Argentum\Common\Exception\InvalidPersonException;
  *   // Define person parameters, which should look like this
  *   $parameters = [
  *       'id'      => '12345678A',
- *       'type'    => '12345678A',
+ *       'type'    => 'natural',
  *       'name'    => 'Example Company',
  *       'email'   => 'billing@example.com',
  *       'phone'   => '+1 23456789',
@@ -243,11 +243,12 @@ class Person extends Parametrized
     /**
      * Set person address
      *
-     * @param Address $value Parameter value
+     * @param array|Address $value Parameter value
      * @return Person provides a fluent interface.
      */
     public function setAddress($value)
     {
+        if (is_array($value)) $value = new Address($value);
         return $this->setParameter('address', $value);
     }
 

@@ -99,6 +99,34 @@ class Helper
         return '\\Argentum\\'.$shortName.'Gateway';
     }
 
+    public static function getGatewayNamespace($shortName) {
+        $gatewayClassName = self::getGatewayClassName($shortName);
+        $gatewayNamespace = substr($gatewayClassName, 0, strrpos($gatewayClassName, '\\'));
+
+        return $gatewayNamespace;
+    }
+
+    /**
+     * Resolve a short document name to a full namespaced document class.
+     *
+     * @param  string $shortName The short document name
+     * @param  string $gatewayClass The gateway class name
+     * @return string The fully namespaced gateway class name
+     */
+    public static function getDocumentClassName($shortName, $gatewayClass)
+    {
+        // replace underscores with namespace marker, PSR-0 style
+        $shortName = str_replace('_', '\\', $shortName);
+
+        $class = self::getGatewayNamespace($gatewayClass);
+        $class .= '\\Document\\'.$shortName;
+        if (!class_exists($class)) {
+            $class = '\\Argentum\\Common\\Document\\'.$shortName;
+        }
+
+        return $class;
+    }
+
     /**
      * Convert an amount into a float.
      * The float datatype can then be converted into the string

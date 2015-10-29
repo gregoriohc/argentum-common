@@ -1,5 +1,7 @@
 <?php namespace Argentum\Common;
 
+use Argentum\Common\Document\AbstractDocument;
+use Argentum\Common\Exception\RuntimeException;
 use Guzzle\Http\ClientInterface;
 use Guzzle\Http\Client as HttpClient;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
@@ -22,7 +24,7 @@ use Symfony\Component\HttpFoundation\Request as HttpRequest;
  *   $parameters = $gateway->getParameters();
  *
  *   // Create a credit card object
- *   $invoice = new Invoice(...);
+ *   $invoice = $gateway->document('invoice');
  *
  *   // Do an authorisation transaction on the gateway
  *   if ($gateway->supportsSing()) {
@@ -270,5 +272,21 @@ abstract class AbstractGateway implements GatewayInterface
     protected function getDefaultHttpRequest()
     {
         return HttpRequest::createFromGlobals();
+    }
+
+    /**
+     * @param string               $class       Document name
+     * @param array                $parameters  Document parameters
+     * @throws RuntimeException                 If no such document is found
+     * @return AbstractDocument
+     */
+    public function document($class, $parameters = []) {
+        $class = Helper::getDocumentClassName($class, $this->getShortName());
+
+        if (!class_exists($class)) {
+            throw new RuntimeException("Class '$class' not found");
+        }
+
+        return new $class($parameters);
     }
 }

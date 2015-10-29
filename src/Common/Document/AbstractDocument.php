@@ -1,6 +1,7 @@
-<?php namespace Argentum\Common;
+<?php namespace Argentum\Common\Document;
 
 use Argentum\Common\Exception\InvalidDocumentException;
+use Argentum\Common\Parametrized;
 
 /**
  * Document class
@@ -14,8 +15,6 @@ use Argentum\Common\Exception\InvalidDocumentException;
  *   // Define document parameters, which should look like this
  *   $parameters = [
  *       'type' => 'invoice',
- *       'from' => new Person(...),
- *       'to' => new Person(...),
  *       'content' => [
  *           'sectionFirst' => [
  *               'parameterOne' => 'Abcd',
@@ -37,13 +36,11 @@ use Argentum\Common\Exception\InvalidDocumentException;
  * *new* is as follows:
  *
  * * type
- * * from
- * * to
  * * content
  *
  * If any unknown parameters are passed in, they will be ignored.  No error is thrown.
  */
-class Document extends Parametrized
+abstract class AbstractDocument extends Parametrized implements DocumentInterface
 {
     /**
      * Create a new Document object using the specified parameters
@@ -70,20 +67,6 @@ class Document extends Parametrized
         if (!is_string($this->getType())) {
             throw new InvalidDocumentException("The type parameter must be a string");
         }
-
-        $from = $this->getFrom();
-        if (!($from instanceof Person)) {
-            throw new InvalidDocumentException("The from parameter must be a Person object");
-        }
-        $from->validate();
-
-        if ($this->hasParameter('to')) {
-            $to = $this->getTo();
-            if (!($to instanceof Person)) {
-                throw new InvalidDocumentException("The to parameter must be a Person object");
-            }
-            $to->validate();
-        }
     }
 
     /**
@@ -100,53 +83,11 @@ class Document extends Parametrized
      * Set document type
      *
      * @param string $value Parameter value
-     * @return Document provides a fluent interface.
+     * @return AbstractDocument provides a fluent interface.
      */
     public function setType($value)
     {
         return $this->setParameter('type', $value);
-    }
-
-    /**
-     * Get document 'from'
-     *
-     * @return Person
-     */
-    public function getFrom()
-    {
-        return $this->getParameter('from');
-    }
-
-    /**
-     * Set document 'from'
-     *
-     * @param Person $value Parameter value
-     * @return Document provides a fluent interface.
-     */
-    public function setFrom($value)
-    {
-        return $this->setParameter('from', $value);
-    }
-
-    /**
-     * Get document 'to'
-     *
-     * @return Person
-     */
-    public function getTo()
-    {
-        return $this->getParameter('to');
-    }
-
-    /**
-     * Set document 'to'
-     *
-     * @param Person $value Parameter value
-     * @return Document provides a fluent interface.
-     */
-    public function setTo($value)
-    {
-        return $this->setParameter('to', $value);
     }
 
     /**
@@ -163,7 +104,7 @@ class Document extends Parametrized
      * Set document content
      *
      * @param array $value Parameter value
-     * @return Document provides a fluent interface.
+     * @return AbstractDocument provides a fluent interface.
      */
     public function setContent($value)
     {

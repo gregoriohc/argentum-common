@@ -7,16 +7,6 @@ use Argentum\Common\Message\AbstractRequest;
  */
 class SignRequest extends AbstractRequest
 {
-    public function getCountryCode()
-    {
-        return $this->getParameter('countryCode');
-    }
-
-    public function setCountryCode($value)
-    {
-        return $this->setParameter('countryCode', $value);
-    }
-
     public function getDocument()
     {
         return $this->getParameter('document');
@@ -32,7 +22,6 @@ class SignRequest extends AbstractRequest
         $this->validate('document');
 
         $data = array();
-        $data['country_code'] = $this->getCountryCode();
         $data['document'] = $this->getDocument();
 
         return $data;

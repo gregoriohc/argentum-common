@@ -55,7 +55,7 @@ abstract class Parametrized
      * @param array $parameters An associative array of parameters
      * @return Parametrized provides a fluent interface.
      */
-    public function initialize($parameters = array())
+    public function initialize(array $parameters = array())
     {
         $this->parameters = new ParameterContainer;
 

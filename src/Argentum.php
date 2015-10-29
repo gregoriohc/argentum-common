@@ -1,12 +1,13 @@
 <?php namespace Argentum;
 
 use Argentum\Common\GatewayFactory;
+use Argentum\Common\DocumentFactory;
 
 /**
  * Argentum class
  *
  * Provides static access to the gateway factory methods.  This is the
- * recommended route for creation and establishment of invoicing gateway
+ * recommended route for creation and establishment of signing gateway
  * objects via the standard GatewayFactory.
  *
  * Example:
@@ -23,7 +24,7 @@ use Argentum\Common\GatewayFactory;
  *   $parameters = $gateway->getParameters();
  *
  *   // Create a credit card object
- *   $invoice = new Invoice(...);
+ *   $invoice = new Argentum::document('invoice');
  *
  *   // Do an sign transaction on the gateway
  *   if ($gateway->supportsSign()) {

@@ -116,7 +116,7 @@ abstract class AbstractRequest extends Parametrized implements RequestInterface
             throw new RuntimeException('Request cannot be modified after it has been sent!');
         }
 
-        return parent::initialize();
+        return parent::initialize($parameters);
     }
 
     /**
