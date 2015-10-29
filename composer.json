@@ -1,6 +1,6 @@
 {
-    "name": "gregoriohc/argentum",
-    "description": "Framework agnostic PHP billing library",
+    "name": "gregoriohc/argentum-common",
+    "description": "Core components for the Argentum PHP electronic documents processing library",
     "license": "MIT",
     "keywords": ["billing", "invoicing"],
     "authors": [

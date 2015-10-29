@@ -10,7 +10,7 @@
          stopOnFailure="false"
          syntaxCheck="false">
     <testsuites>
-        <testsuite name="Argentum Test Suite">
+        <testsuite name="Argentum Common Test Suite">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
