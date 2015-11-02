@@ -2,6 +2,7 @@
 
 use Guzzle\Http\ClientInterface;
 use Argentum\Common\Exception\RuntimeException;
+use ReflectionClass;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 
 /**
@@ -100,7 +101,12 @@ class GatewayFactory
             throw new RuntimeException("Class '$class' not found");
         }
 
-        return new $class($httpClient, $httpRequest);
+        /** @var AbstractGateway $gateway */
+        $gateway = new $class($httpClient, $httpRequest);
+        $gatewayClassInfo = new ReflectionClass($gateway);
+        $gateway->setPath(dirname($gatewayClassInfo->getFileName()));
+
+        return $gateway;
     }
 
     /**
@@ -110,7 +116,7 @@ class GatewayFactory
      */
     public function getSupportedGateways()
     {
-        $package = json_decode(file_get_contents(__DIR__.'/../../../composer.json'), true);
+        $package = json_decode(file_get_contents(__DIR__.'/../../composer.json'), true);
 
         return $package['extra']['gateways'];
     }

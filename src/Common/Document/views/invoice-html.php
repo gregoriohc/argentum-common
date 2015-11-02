@@ -1,8 +1,3 @@
-<?php
-/** @var \Argentum\Common\Invoice $invoice */
-/** @var \Argentum\Common\Item $item */
-/** @var \Argentum\Common\Tax $tax */
-?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,7 +29,7 @@
                         <th>Amount</th>
                     </tr>
                 </thead>
-                <tbody>>
+                <tbody>
                     <?php foreach ($invoice->getItems() as $item) : ?>
                     <tr class="item">
                         <td><?php echo $item->getName(); ?></td>

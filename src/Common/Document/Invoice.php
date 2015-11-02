@@ -34,11 +34,14 @@ class Invoice extends AbstractDocument
      *
      * @param array $parameters An array of parameters to set on the new object
      */
-    public function __construct($parameters = null)
+    public function __construct($parameters = array())
     {
-        if (is_array($parameters)) $parameters['type'] = 'invoice';
-
         $this->addParametersRequired(array('to'));
+
+        // Initialize default parameters
+        $parameters['type'] = 'invoice';
+        if (!isset($parameters['items'])) $parameters['items'] = [];
+        if (!isset($parameters['taxes'])) $parameters['taxes'] = [];
 
         parent::__construct($parameters);
     }
