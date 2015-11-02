@@ -160,4 +160,23 @@ abstract class Parametrized
             }
         }
     }
+
+    /**
+     * @return array
+     */
+    public function toArray() {
+        $data = array();
+        foreach ($this->parameters as $parameter => $value) {
+            if ($value instanceof Parametrized) {
+                /** @var Parametrized $value */
+                $data[$parameter] = $value->toArray();
+            } elseif (is_object($value)) {
+                $data[$parameter] = get_object_vars($value);
+            } else {
+                $data[$parameter] = $value;
+            }
+        }
+
+        return $data;
+    }
 }

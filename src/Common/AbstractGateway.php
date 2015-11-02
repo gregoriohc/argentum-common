@@ -54,6 +54,11 @@ abstract class AbstractGateway implements GatewayInterface
     protected $httpRequest;
 
     /**
+     * @var string
+     */
+    protected $path;
+
+    /**
      * Create a new gateway instance
      *
      * @param ClientInterface $httpClient  A Guzzle client to make API calls with
@@ -64,6 +69,7 @@ abstract class AbstractGateway implements GatewayInterface
         $this->httpClient = $httpClient ?: $this->getDefaultHttpClient();
         $this->httpRequest = $httpRequest ?: $this->getDefaultHttpRequest();
         $this->initialize();
+        $this->setPath(__DIR__);
     }
 
     /**
@@ -74,6 +80,26 @@ abstract class AbstractGateway implements GatewayInterface
     public function getShortName()
     {
         return Helper::getGatewayShortName(get_class($this));
+    }
+
+    /**
+     * Set the path of the Gateway
+     *
+     * @return string
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
+
+    /**
+     * Get the path of the Gateway
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
     }
 
     /**
@@ -287,6 +313,10 @@ abstract class AbstractGateway implements GatewayInterface
             throw new RuntimeException("Class '$class' not found");
         }
 
-        return new $class($parameters);
+        $document = new $class($parameters);
+        /** @var AbstractDocument $document */
+        $document->addTemplatesFolder('gateway', $this->getPath() . '/Document/views');
+
+        return $document;
     }
 }
