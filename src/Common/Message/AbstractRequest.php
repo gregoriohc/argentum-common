@@ -1,14 +1,10 @@
 <?php namespace Argentum\Common\Message;
 
-use Argentum\Common\Parametrized;
-use Argentum\Common\Invoice;
-use Argentum\Common\Currency;
-use Argentum\Common\Helper;
-use Argentum\Common\Exception\InvalidRequestException;
+use Argentum\Common\Currencyable;
 use Argentum\Common\Exception\RuntimeException;
 use Guzzle\Http\ClientInterface;
-use Symfony\Component\HttpFoundation\Request as HttpRequest;
-use InvalidArgumentException;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Abstract Request
@@ -53,7 +49,7 @@ use InvalidArgumentException;
  * @see RequestInterface
  * @see AbstractResponse
  */
-abstract class AbstractRequest extends Parametrized implements RequestInterface
+abstract class AbstractRequest extends Currencyable implements RequestInterface
 {
     /**
      * The request client.
@@ -77,25 +73,15 @@ abstract class AbstractRequest extends Parametrized implements RequestInterface
     protected $response;
 
     /**
-     * @var bool
-     */
-    protected $zeroAmountAllowed = true;
-
-    /**
-     * @var bool
-     */
-    protected $negativeAmountAllowed = false;
-
-    /**
      * Create a new Request
      *
      * @param ClientInterface $httpClient  A Guzzle client to make API calls with
-     * @param HttpRequest     $httpRequest A Symfony HTTP request object
+     * @param RequestStack    $httpRequestStack A Symfony HTTP request stack
      */
-    public function __construct(ClientInterface $httpClient, HttpRequest $httpRequest)
+    public function __construct(ClientInterface $httpClient, RequestStack $httpRequestStack)
     {
         $this->httpClient = $httpClient;
-        $this->httpRequest = $httpRequest;
+        $this->httpRequest = $this->httpRequestStack->getCurrentRequest();
 
         parent::__construct();
     }
@@ -155,227 +141,6 @@ abstract class AbstractRequest extends Parametrized implements RequestInterface
     public function setTestMode($value)
     {
         return $this->setParameter('testMode', $value);
-    }
-
-    /**
-     * Validate the request.
-     *
-     * This method is called internally by gateways to avoid wasting time with an API call
-     * when the request is clearly invalid.
-     *
-     * @param string ... a variable length list of required parameters
-     * @throws InvalidRequestException
-     */
-    public function validate()
-    {
-        foreach (func_get_args() as $key) {
-            $value = $this->parameters->get($key);
-            if (empty($value)) {
-                throw new InvalidRequestException("The $key parameter is required");
-            }
-        }
-    }
-
-    /**
-     * Get the invoice.
-     *
-     * @return Invoice
-     */
-    public function getInvoice()
-    {
-        return $this->getParameter('invoice');
-    }
-
-    /**
-     * Sets the invoice.
-     *
-     * @param Invoice $value
-     * @return AbstractRequest Provides a fluent interface
-     */
-    public function setInvoice($value)
-    {
-        if ($value && !$value instanceof Invoice) {
-            $value = new Invoice($value);
-        }
-
-        return $this->setParameter('invoice', $value);
-    }
-
-    /**
-     * Get the invoice reference.
-     *
-     * @return string
-     */
-    public function getInvoiceReference()
-    {
-        return $this->getParameter('invoiceReference');
-    }
-
-    /**
-     * Sets the invoice reference.
-     *
-     * @param string $value
-     * @return AbstractRequest Provides a fluent interface
-     */
-    public function setInvoiceReference($value)
-    {
-        return $this->setParameter('invoiceReference', $value);
-    }
-
-    /**
-     * Get the request reference.
-     *
-     * @return string
-     */
-    public function getRequestReference()
-    {
-        return $this->getParameter('requestReference');
-    }
-
-    /**
-     * Sets the request reference.
-     *
-     * @param string $value
-     * @return AbstractRequest Provides a fluent interface
-     */
-    public function setRequestReference($value)
-    {
-        return $this->setParameter('requestReference', $value);
-    }
-
-    /**
-     * Get the request id.
-     *
-     * @return string
-     */
-    public function getRequestId()
-    {
-        return $this->getParameter('requestId');
-    }
-
-    /**
-     * Sets the request id.
-     *
-     * @param string $value
-     * @return AbstractRequest Provides a fluent interface
-     */
-    public function setRequestId($value)
-    {
-        return $this->setParameter('requestId', $value);
-    }
-
-    /**
-     * Convert an amount into a float.
-     *
-     * @var string|int|float $value The value to convert.
-     * @throws InvalidRequestException on any validation failure.
-     * @return float The amount converted to a float.
-     */
-
-    public function toFloat($value)
-    {
-        try {
-            return Helper::toFloat($value);
-        } catch (InvalidArgumentException $e) {
-            // Throw old exception for legacy implementations.
-            throw new InvalidRequestException($e->getMessage(), $e->getCode(), $e);
-        }
-    }
-
-    /**
-     * Get the invoice currency code.
-     *
-     * @return string
-     */
-    public function getCurrency()
-    {
-        return $this->getParameter('currency');
-    }
-
-    /**
-     * Sets the invoice currency code.
-     *
-     * @param string $value
-     * @return AbstractRequest Provides a fluent interface
-     */
-    public function setCurrency($value)
-    {
-        return $this->setParameter('currency', strtoupper($value));
-    }
-
-    /**
-     * Get the invoice currency number.
-     *
-     * @return integer
-     */
-    public function getCurrencyNumeric()
-    {
-        if ($currency = Currency::find($this->getCurrency())) {
-            return $currency->getNumeric();
-        }
-
-        return false;
-    }
-
-    /**
-     * Get the number of decimal places in the invoice currency.
-     *
-     * @return integer
-     */
-    public function getCurrencyDecimalPlaces()
-    {
-        if ($currency = Currency::find($this->getCurrency())) {
-            return $currency->getDecimals();
-        }
-
-        return 2;
-    }
-
-    /**
-     * Get currency decimal factor
-     *
-     * @return number
-     */
-    private function getCurrencyDecimalFactor()
-    {
-        return pow(10, $this->getCurrencyDecimalPlaces());
-    }
-
-    /**
-     * Format an amount for the invoice currency.
-     *
-     * @param $amount
-     * @return string
-     */
-    public function formatCurrency($amount)
-    {
-        return number_format(
-            $amount,
-            $this->getCurrencyDecimalPlaces(),
-            '.',
-            ''
-        );
-    }
-
-    /**
-     * Get the request description.
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->getParameter('description');
-    }
-
-    /**
-     * Sets the request description.
-     *
-     * @param string $value
-     * @return AbstractRequest Provides a fluent interface
-     */
-    public function setDescription($value)
-    {
-        return $this->setParameter('description', $value);
     }
 
     /**
@@ -460,58 +225,6 @@ abstract class AbstractRequest extends Parametrized implements RequestInterface
     public function setNotifyUrl($value)
     {
         return $this->setParameter('notifyUrl', $value);
-    }
-
-    /**
-     * Get the sign issuer.
-     *
-     * This field is used by some gateways.
-     *
-     * @return string
-     */
-    public function getIssuer()
-    {
-        return $this->getParameter('issuer');
-    }
-
-    /**
-     * Set the sign issuer.
-     *
-     * This field is used by some gateways.
-     *
-     * @param string $value
-     * @return AbstractRequest Provides a fluent interface
-     */
-    public function setIssuer($value)
-    {
-        return $this->setParameter('issuer', $value);
-    }
-
-    /**
-     * Get the sign method.
-     *
-     * This field is used by some gateways, which support
-     * multiple sign providers with a single API.
-     *
-     * @return string
-     */
-    public function getSignMethod()
-    {
-        return $this->getParameter('signMethod');
-    }
-
-    /**
-     * Set the sign method.
-     *
-     * This field is used by some gateways, which support
-     * multiple sign providers with a single API.
-     *
-     * @param string $value
-     * @return AbstractRequest Provides a fluent interface
-     */
-    public function setSignMethod($value)
-    {
-        return $this->setParameter('signMethod', $value);
     }
 
     /**

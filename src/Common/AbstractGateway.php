@@ -4,7 +4,7 @@ use Argentum\Common\Document\AbstractDocument;
 use Argentum\Common\Exception\RuntimeException;
 use Guzzle\Http\ClientInterface;
 use Guzzle\Http\Client as HttpClient;
-use Symfony\Component\HttpFoundation\Request as HttpRequest;
+use Symfony\Component\HttpFoundation\RequestStack as HttpRequestStack;
 
 /**
  * Base invoicing gateway class
@@ -49,9 +49,9 @@ abstract class AbstractGateway implements GatewayInterface
     protected $httpClient;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\Request
+     * @var \Symfony\Component\HttpFoundation\RequestStack
      */
-    protected $httpRequest;
+    protected $httpRequestStack;
 
     /**
      * @var string
@@ -61,13 +61,13 @@ abstract class AbstractGateway implements GatewayInterface
     /**
      * Create a new gateway instance
      *
-     * @param ClientInterface $httpClient  A Guzzle client to make API calls with
-     * @param HttpRequest     $httpRequest A Symfony HTTP request object
+     * @param ClientInterface   $httpClient  A Guzzle client to make API calls with
+     * @param HttpRequestStack  $httpRequestStack A Symfony HTTP request stack
      */
-    public function __construct(ClientInterface $httpClient = null, HttpRequest $httpRequest = null)
+    public function __construct(ClientInterface $httpClient = null, HttpRequestStack $httpRequestStack = null)
     {
         $this->httpClient = $httpClient ?: $this->getDefaultHttpClient();
-        $this->httpRequest = $httpRequest ?: $this->getDefaultHttpRequest();
+        $this->httpRequestStack = $httpRequestStack ?: $this->getDefaultHttpRequestStack();
         $this->initialize();
         $this->setPath(__DIR__);
     }
@@ -271,7 +271,7 @@ abstract class AbstractGateway implements GatewayInterface
     protected function createRequest($class, array $parameters)
     {
         /** @var \Argentum\Common\Message\AbstractRequest $obj */
-        $obj = new $class($this->httpClient, $this->httpRequest);
+        $obj = new $class($this->httpClient, $this->httpRequestStack);
 
         return $obj->initialize(array_replace($this->getParameters(), $parameters));
     }
@@ -294,11 +294,11 @@ abstract class AbstractGateway implements GatewayInterface
     /**
      * Get the global default HTTP request.
      *
-     * @return HttpRequest
+     * @return HttpRequestStack
      */
-    protected function getDefaultHttpRequest()
+    protected function getDefaultHttpRequestStack()
     {
-        return HttpRequest::createFromGlobals();
+        return new HttpRequestStack();
     }
 
     /**

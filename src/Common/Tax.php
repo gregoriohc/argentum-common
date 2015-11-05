@@ -10,7 +10,7 @@
  * <code>
  *   // Define tax parameters, which should look like this
  *   $parameters = [
- *       'name'   => 'VAT',
+ *       'type'   => 'vat',
  *       'rate'   => 16.00,     // Rate can be negative
  *   ];
  *
@@ -21,8 +21,10 @@
  * The full list of tax attributes that may be set via the parameter to
  * *new* is as follows:
  *
+ * * type
  * * name
  * * rate
+ * * baseAmount
  */
 class Tax extends Parametrized
 {
@@ -31,11 +33,35 @@ class Tax extends Parametrized
      *
      * @param array $parameters An array of parameters to set on the new object
      */
-    public function __construct($parameters = null)
+    public function __construct($parameters = array())
     {
-        $this->addParametersRequired(array('name', 'rate'));
-
         parent::__construct($parameters);
+
+        $this->addParametersRequired(array('type', 'rate'));
+
+        if (!isset($parameters['type']) && isset($parameters['name'])) $parameters['type'] = strtolower($parameters['name']);
+        if (!isset($parameters['name'])) $parameters['name'] = strtoupper($parameters['type']);
+    }
+
+    /**
+     * Get tax type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->getParameter('type');
+    }
+
+    /**
+     * Set tax type
+     *
+     * @param string $value Parameter value
+     * @return Tax provides a fluent interface.
+     */
+    public function setType($value)
+    {
+        return $this->setParameter('type', $value);
     }
 
     /**
@@ -81,12 +107,47 @@ class Tax extends Parametrized
     }
 
     /**
-     * Get tax amount from a given base amount
+     * Get tax base amount
      *
      * @return float
      */
-    public function getAmount($baseAmount)
+    public function getBaseAmount()
     {
+        return $this->getParameter('baseAmount');
+    }
+
+    /**
+     * Set tax base amount
+     *
+     * @param float $value Parameter value
+     * @return Tax provides a fluent interface.
+     */
+    public function setBaseAmount($value)
+    {
+        return $this->setParameter('baseAmount', $value);
+    }
+
+    /**
+     * Add tax base amount
+     *
+     * @param float $value Parameter value
+     * @return Tax provides a fluent interface.
+     */
+    public function addBaseAmount($value)
+    {
+        return $this->setParameter('baseAmount', $this->getBaseAmount() + $value);
+    }
+
+    /**
+     * Get tax amount from a given base amount
+     *
+     * @param float $baseAmount
+     * @return float
+     */
+    public function getAmount($baseAmount = null)
+    {
+        if (null === $baseAmount) $baseAmount = $this->getBaseAmount();
+
         return round($baseAmount * $this->getRate() / 100, 2);
     }
 }

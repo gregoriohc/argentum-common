@@ -220,31 +220,13 @@ class Address extends Parametrized
     }
 
     public function __toString() {
-        $addressParts = array();
+        $address = [];
+        $parts = ['address_1', 'address_2', 'address_3', 'neighborhood', 'postcode', 'locality', 'state'];
 
-        $address_1 = $this->parameters->get('address_1');
-        if (!empty($address_1)) $addressParts[] = $address_1;
-
-        $address_2 = $this->parameters->get('address_2');
-        if (!empty($address_2)) $addressParts[] = $address_2;
-
-        $address_3 = $this->parameters->get('address_3');
-        if (!empty($address_3)) $addressParts[] = $address_3;
-
-        $neighborhood = $this->parameters->get('neighborhood');
-        if (!empty($neighborhood)) $addressParts[] = $neighborhood;
-
-        $postcode = $this->parameters->get('postcode');
-        if (!empty($postcode)) $addressParts[] = $postcode;
-
-        $locality = $this->parameters->get('locality');
-        if (!empty($locality)) $addressParts[] = $locality;
-
-        $state = $this->parameters->get('state');
-        if (!empty($state)) $addressParts[] = $state;
-
-        //$country = $this->parameters->get('country');
-        //if (!empty($country)) $addressParts[] = $country;
+        foreach ($parts as $part) {
+            $value = $this->parameters->get($part);
+            if (!empty($value)) $address[] = $value;
+        }
 
         return implode(', ', $addressParts);
     }

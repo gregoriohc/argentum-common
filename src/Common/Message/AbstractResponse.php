@@ -155,7 +155,6 @@ abstract class AbstractResponse implements ResponseInterface
     public function redirect()
     {
         $this->getRedirectResponse()->send();
-        exit;
     }
 
     /**
@@ -167,8 +166,10 @@ abstract class AbstractResponse implements ResponseInterface
             throw new RuntimeException('This response does not support redirection.');
         }
 
+        /** @var RedirectResponseInterface $this */
         if ('GET' === $this->getRedirectMethod()) {
-            return HttpRedirectResponse::create($this->getRedirectUrl());
+            $url = $this->getRedirectUrl();
+            return HttpRedirectResponse::create($url);
         } elseif ('POST' === $this->getRedirectMethod()) {
             $hiddenFields = '';
             foreach ($this->getRedirectData() as $key => $value) {

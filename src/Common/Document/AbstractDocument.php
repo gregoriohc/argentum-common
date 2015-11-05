@@ -54,6 +54,8 @@ abstract class AbstractDocument extends Parametrized implements DocumentInterfac
     {
         $this->addParametersRequired(array('type'));
 
+        if (!isset($parameters['content'])) $parameters['content'] = [];
+
         $this->templateEngine = new TemplateEngine(__DIR__ . '/views');
 
         parent::__construct($parameters);

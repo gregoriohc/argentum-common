@@ -46,7 +46,7 @@ class Person extends Parametrized
      *
      * @param array $parameters An array of parameters to set on the new object
      */
-    public function __construct($parameters = null)
+    public function __construct($parameters = array())
     {
         $this->addParametersRequired(array('id', 'name'));
 
