@@ -20,7 +20,7 @@ class Helper
     {
         return preg_replace_callback(
             '/_([a-z])/',
-            function ($match) {
+            function($match) {
                 return strtoupper($match[1]);
             },
             $str

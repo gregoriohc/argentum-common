@@ -39,8 +39,12 @@ class Tax extends Parametrized
 
         $this->addParametersRequired(array('type', 'rate'));
 
-        if (!isset($parameters['type']) && isset($parameters['name'])) $parameters['type'] = strtolower($parameters['name']);
-        if (!isset($parameters['name'])) $parameters['name'] = strtoupper($parameters['type']);
+        if (!isset($parameters['type']) && isset($parameters['name'])) {
+            $parameters['type'] = strtolower($parameters['name']);
+        }
+        if (!isset($parameters['name'])) {
+            $parameters['name'] = strtoupper($parameters['type']);
+        }
     }
 
     /**
@@ -146,7 +150,9 @@ class Tax extends Parametrized
      */
     public function getAmount($baseAmount = null)
     {
-        if (null === $baseAmount) $baseAmount = $this->getBaseAmount();
+        if (null === $baseAmount) {
+            $baseAmount = $this->getBaseAmount();
+        }
 
         return round($baseAmount * $this->getRate() / 100, 2);
     }
