@@ -88,7 +88,9 @@ class Invoice extends Ticket
      */
     public function setTo($value)
     {
-        if (is_array($value)) $value = new Person($value);
+        if (is_array($value)) {
+            $value = new Person($value);
+        }
         return $this->setParameter('to', $value);
     }
 }

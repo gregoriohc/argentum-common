@@ -316,7 +316,7 @@ abstract class AbstractGateway implements GatewayInterface
 
         $document = new $class(array_replace($this->getParameters(), $parameters));
         /** @var AbstractDocument $document */
-        $document->addTemplatesFolder('gateway', $this->getPath() . '/Document/views');
+        $document->addTemplatesFolder('gateway', $this->getPath().'/Document/views');
 
         return $document;
     }

@@ -171,7 +171,7 @@ class Item extends Parametrized
     {
         if (is_array($value)) {
             $bag = new Bag();
-            foreach($value as $taxParameters) {
+            foreach ($value as $taxParameters) {
                 $bag->add(new Tax($taxParameters));
             }
             $value = $bag;

@@ -54,9 +54,11 @@ abstract class AbstractDocument extends Parametrized implements DocumentInterfac
     {
         $this->addParametersRequired(array('type'));
 
-        if (!isset($parameters['content'])) $parameters['content'] = [];
+        if (!isset($parameters['content'])) {
+            $parameters['content'] = [];
+        }
 
-        $this->templateEngine = new TemplateEngine(__DIR__ . '/views');
+        $this->templateEngine = new TemplateEngine(__DIR__.'/views');
 
         parent::__construct($parameters);
     }
@@ -126,7 +128,9 @@ abstract class AbstractDocument extends Parametrized implements DocumentInterfac
      */
     public function addTemplatesFolder($name, $path)
     {
-        if (is_dir($path)) $this->templateEngine->addFolder($name, $path);
+        if (is_dir($path)) {
+            $this->templateEngine->addFolder($name, $path);
+        }
     }
 
     /**
@@ -139,10 +143,10 @@ abstract class AbstractDocument extends Parametrized implements DocumentInterfac
     {
         $this->validate();
 
-        $view = $this->getType() . '-' . $format;
+        $view = $this->getType().'-'.$format;
 
         if (null !== $folderName) {
-            $view = $folderName . '::' . $view;
+            $view = $folderName.'::'.$view;
         } else {
             if ($this->templateEngine->getFolders()->exists('custom') && $this->templateEngine->exists('custom::'.$view)) {
                 $view = 'custom::'.$view;

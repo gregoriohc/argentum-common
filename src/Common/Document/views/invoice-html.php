@@ -46,7 +46,7 @@
                     </tr>
                     <?php foreach ($invoice->getTaxes() as $tax) : ?>
                     <tr class="tax">
-                        <td colspan="3" class="right"><?php echo $tax->getName() . ' ('.$tax->getRate().'%)'; ?></td>
+                        <td colspan="3" class="right"><?php echo $tax->getName().' ('.$tax->getRate().'%)'; ?></td>
                         <td><?php echo $tax->getAmount($invoice->getSubtotal()); ?></td>
                     </tr>
                     <?php endforeach; ?>
