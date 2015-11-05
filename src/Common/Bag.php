@@ -78,4 +78,23 @@ class Bag implements \IteratorAggregate, \Countable
     {
         return count($this->elements);
     }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $data = array();
+        foreach ($this->elements as $element => $value) {
+            if (is_object($value) && method_exists($value, 'toArray')) {
+                $data[$element] = $value->toArray();
+            } elseif (is_object($value)) {
+                $data[$element] = get_object_vars($value);
+            } else {
+                $data[$element] = $value;
+            }
+        }
+
+        return $data;
+    }
 }

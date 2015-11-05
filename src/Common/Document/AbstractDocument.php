@@ -2,6 +2,7 @@
 
 use Argentum\Common\Exception\InvalidDocumentException;
 use Argentum\Common\Parametrized;
+use League\Plates\Engine as TemplateEngine;
 
 /**
  * Document class
@@ -42,14 +43,18 @@ use Argentum\Common\Parametrized;
  */
 abstract class AbstractDocument extends Parametrized implements DocumentInterface
 {
+    private $templateEngine;
+
     /**
      * Create a new Document object using the specified parameters
      *
      * @param array $parameters An array of parameters to set on the new object
      */
-    public function __construct($parameters = null)
+    public function __construct($parameters = array())
     {
-        $this->addParametersRequired(array('type', 'from', 'content'));
+        $this->addParametersRequired(array('type'));
+
+        $this->templateEngine = new TemplateEngine(__DIR__ . '/views');
 
         parent::__construct($parameters);
     }
@@ -109,6 +114,41 @@ abstract class AbstractDocument extends Parametrized implements DocumentInterfac
     public function setContent($value)
     {
         return $this->setParameter('content', $value);
+    }
+
+    /**
+     * Add templates folder
+     *
+     * @param string $name
+     * @param string $path
+     */
+    public function addTemplatesFolder($name, $path)
+    {
+        if (is_dir($path)) $this->templateEngine->addFolder($name, $path);
+    }
+
+    /**
+     * @param string $format
+     * @param array $parameters
+     * @param null|string $folderName
+     * @return string
+     */
+    public function render($format, $parameters = array(), $folderName = null)
+    {
+        $this->validate();
+
+        $view = $this->getType() . '-' . $format;
+
+        if (null !== $folderName) {
+            $view = $folderName . '::' . $view;
+        } else {
+            if ($this->templateEngine->getFolders()->exists('custom') && $this->templateEngine->exists('custom::'.$view)) {
+                $view = 'custom::'.$view;
+            } elseif ($this->templateEngine->getFolders()->exists('gateway') && $this->templateEngine->exists('gateway::'.$view)) {
+                $view = 'gateway::'.$view;
+            }
+        }
+        return $this->templateEngine->render($view, array_merge([$this->getType() => $this], $parameters));
     }
 
 }
