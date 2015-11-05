@@ -228,7 +228,7 @@ class Address extends Parametrized
             if (!empty($value)) $address[] = $value;
         }
 
-        return implode(', ', $addressParts);
+        return implode(', ', $address);
     }
 
 }

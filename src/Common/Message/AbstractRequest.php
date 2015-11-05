@@ -81,7 +81,7 @@ abstract class AbstractRequest extends Currencyable implements RequestInterface
     public function __construct(ClientInterface $httpClient, RequestStack $httpRequestStack)
     {
         $this->httpClient = $httpClient;
-        $this->httpRequest = $this->httpRequestStack->getCurrentRequest();
+        $this->httpRequest = $httpRequestStack->getCurrentRequest();
 
         parent::__construct();
     }
