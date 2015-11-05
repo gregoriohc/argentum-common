@@ -85,6 +85,7 @@ abstract class AbstractGateway implements GatewayInterface
     /**
      * Set the path of the Gateway
      *
+     * @param string $path
      * @return string
      */
     public function setPath($path)
@@ -306,14 +307,14 @@ abstract class AbstractGateway implements GatewayInterface
      * @throws RuntimeException                 If no such document is found
      * @return AbstractDocument
      */
-    public function document($class, $parameters = []) {
+    public function createDocument($class, $parameters = []) {
         $class = Helper::getDocumentClassName($class, $this->getShortName());
 
         if (!class_exists($class)) {
             throw new RuntimeException("Class '$class' not found");
         }
 
-        $document = new $class($parameters);
+        $document = new $class(array_replace($this->getParameters(), $parameters));
         /** @var AbstractDocument $document */
         $document->addTemplatesFolder('gateway', $this->getPath() . '/Document/views');
 

@@ -26,6 +26,19 @@ use Argentum\Common\Person;
  *   // Create a invoice object
  *   $invoice = new Invoice($parameters);
  * </code>
+ *
+ * The full list of document attributes that may be set via the parameter to
+ * *new* is as follows:
+ *
+ * * id
+ * * date
+ * * from
+ * * to
+ * * items
+ * * taxes
+ * * currency
+ *
+ * If any unknown parameters are passed in, they will be ignored.  No error is thrown.
  */
 class Invoice extends AbstractDocument
 {
@@ -40,8 +53,10 @@ class Invoice extends AbstractDocument
 
         // Initialize default parameters
         $parameters['type'] = 'invoice';
+        if (!isset($parameters['date'])) $parameters['date'] = new \DateTime();
         if (!isset($parameters['items'])) $parameters['items'] = [];
         if (!isset($parameters['taxes'])) $parameters['taxes'] = [];
+        if (!isset($parameters['content'])) $parameters['content'] = [];
 
         parent::__construct($parameters);
     }
@@ -72,7 +87,7 @@ class Invoice extends AbstractDocument
     /**
      * Get invoice id
      *
-     * @return Bag
+     * @return string
      */
     public function getId()
     {
@@ -88,6 +103,27 @@ class Invoice extends AbstractDocument
     public function setId($value)
     {
         return $this->setParameter('id', $value);
+    }
+
+    /**
+     * Get invoice date
+     *
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->getParameter('date');
+    }
+
+    /**
+     * Set invoice date
+     *
+     * @param \DateTime $value Parameter value
+     * @return Invoice provides a fluent interface.
+     */
+    public function setDate($value)
+    {
+        return $this->setParameter('date', $value);
     }
 
     /**
@@ -188,6 +224,27 @@ class Invoice extends AbstractDocument
             $value = $bag;
         }
         return $this->setParameter('taxes', $value);
+    }
+
+    /**
+     * Get invoice currency
+     *
+     * @return string
+     */
+    public function getCurrency()
+    {
+        return $this->getParameter('currency');
+    }
+
+    /**
+     * Set invoice currency
+     *
+     * @param string $value Parameter value
+     * @return Invoice provides a fluent interface.
+     */
+    public function setCurrency($value)
+    {
+        return $this->setParameter('currency', $value);
     }
 
     /**
