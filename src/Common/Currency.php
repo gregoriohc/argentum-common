@@ -1,4 +1,5 @@
-<?php namespace Argentum\Common;
+<?php
+namespace Argentum\Common;
 
 /**
  * Currency class

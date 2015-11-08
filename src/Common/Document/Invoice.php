@@ -1,4 +1,5 @@
-<?php namespace Argentum\Common\Document;
+<?php
+namespace Argentum\Common\Document;
 
 use Argentum\Common\Exception\InvalidDocumentException;
 use Argentum\Common\Person;
@@ -50,7 +51,7 @@ class Invoice extends Ticket
         $this->addParametersRequired(array('to'));
 
         // Initialize default parameters
-        $parameters['type'] = 'invoice';
+        $this->setType('invoice');
     }
 
     /**

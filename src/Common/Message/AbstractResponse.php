@@ -1,4 +1,5 @@
-<?php namespace Argentum\Common\Message;
+<?php
+namespace Argentum\Common\Message;
 
 use Argentum\Common\Exception\RuntimeException;
 use Symfony\Component\HttpFoundation\RedirectResponse as HttpRedirectResponse;

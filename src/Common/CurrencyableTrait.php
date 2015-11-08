@@ -1,20 +1,14 @@
-<?php namespace Argentum\Common;
+<?php
+namespace Argentum\Common;
 
 /**
  * Currencyable
  *
  * @see Parametrized
  */
-abstract class Currencyable extends Parametrized
+trait CurrencyableTrait
 {
-    /**
-     * Create a new Currencyable
-     * @param array $parameters
-     */
-    public function __construct($parameters = array())
-    {
-        parent::__construct($parameters);
-    }
+    use ParametrizedTrait;
 
     /**
      * Get the currency code.
@@ -30,7 +24,7 @@ abstract class Currencyable extends Parametrized
      * Sets the currency code.
      *
      * @param string $value
-     * @return Currencyable Provides a fluent interface
+     * @return self Provides a fluent interface
      */
     public function setCurrency($value)
     {

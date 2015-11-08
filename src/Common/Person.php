@@ -1,4 +1,5 @@
-<?php namespace Argentum\Common;
+<?php
+namespace Argentum\Common;
 
 use Argentum\Common\Exception\InvalidPersonException;
 
@@ -39,8 +40,10 @@ use Argentum\Common\Exception\InvalidPersonException;
  *
  * If any unknown parameters passed, they will be ignored.
  */
-class Person extends Parametrized
+class Person
 {
+    use ParametrizedTrait;
+
     /**
      * Create a new Person object using the specified parameters
      *
@@ -50,7 +53,7 @@ class Person extends Parametrized
     {
         $this->addParametersRequired(array('id', 'name'));
 
-        parent::__construct($parameters);
+        $this->initializeParameters($parameters);
     }
 
     /**
@@ -61,7 +64,7 @@ class Person extends Parametrized
      */
     public function validate()
     {
-        parent::validate();
+        $this->validateRequiredParameters();
 
         if (!is_string($this->getId())) {
             throw new InvalidPersonException("The id parameter must be a string");

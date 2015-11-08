@@ -1,4 +1,5 @@
-<?php namespace Argentum\Common;
+<?php
+namespace Argentum\Common;
 
 /**
  * Cart Item
@@ -31,8 +32,10 @@
  * * price
  * * taxes
  */
-class Item extends Parametrized
+class Item
 {
+    use ParametrizedTrait;
+
     /**
      * Create a new Item object using the specified parameters
      *
@@ -42,7 +45,7 @@ class Item extends Parametrized
     {
         $this->addParametersRequired(array('name', 'price'));
 
-        parent::__construct($parameters);
+        $this->initializeParameters($parameters);
     }
 
 

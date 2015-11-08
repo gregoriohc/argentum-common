@@ -1,4 +1,5 @@
-<?php namespace Argentum\Common\Document;
+<?php
+namespace Argentum\Common\Document;
 
 use Argentum\Common\Bag;
 use Argentum\Common\Item;
@@ -50,7 +51,7 @@ class Ticket extends AbstractDocument
         $this->addParametersRequired(array('from'));
 
         // Initialize default parameters
-        $parameters['type'] = 'ticket';
+        $this->setType('ticket');
         $this->setDate(new \DateTime());
         $this->setItems([]);
     }

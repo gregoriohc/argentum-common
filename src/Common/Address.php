@@ -1,4 +1,5 @@
-<?php namespace Argentum\Common;
+<?php
+namespace Argentum\Common;
 
 /**
  * Address class
@@ -37,8 +38,10 @@
  *
  * If any unknown parameters passed, they will be ignored.
  */
-class Address extends Parametrized
+class Address
 {
+    use ParametrizedTrait;
+
     /**
      * Create a new Address object using the specified parameters
      *
@@ -48,7 +51,7 @@ class Address extends Parametrized
     {
         $this->addParametersRequired(array('address_1', 'locality', 'country'));
 
-        parent::__construct($parameters);
+        $this->initializeParameters($parameters);
     }
 
     /**
@@ -230,5 +233,4 @@ class Address extends Parametrized
 
         return implode(', ', $address);
     }
-
 }

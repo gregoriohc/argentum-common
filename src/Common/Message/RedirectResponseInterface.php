@@ -1,4 +1,5 @@
-<?php namespace Argentum\Common\Message;
+<?php
+namespace Argentum\Common\Message;
 
 /**
  * Redirect Response interface

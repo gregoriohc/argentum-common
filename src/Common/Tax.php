@@ -1,4 +1,5 @@
-<?php namespace Argentum\Common;
+<?php
+namespace Argentum\Common;
 
 /**
  * Tax class
@@ -26,8 +27,10 @@
  * * rate
  * * baseAmount
  */
-class Tax extends Parametrized
+class Tax
 {
+    use ParametrizedTrait;
+
     /**
      * Create a new Document object using the specified parameters
      *
@@ -35,12 +38,12 @@ class Tax extends Parametrized
      */
     public function __construct($parameters = array())
     {
-        parent::__construct($parameters);
-
         $this->addParametersRequired(array('type', 'rate'));
 
         if (!isset($parameters['type']) && isset($parameters['name'])) $parameters['type'] = strtolower($parameters['name']);
         if (!isset($parameters['name'])) $parameters['name'] = strtoupper($parameters['type']);
+
+        $this->initializeParameters($parameters);
     }
 
     /**

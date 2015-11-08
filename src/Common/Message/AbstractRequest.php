@@ -1,6 +1,7 @@
-<?php namespace Argentum\Common\Message;
+<?php
+namespace Argentum\Common\Message;
 
-use Argentum\Common\Currencyable;
+use Argentum\Common\CurrencyableTrait;
 use Argentum\Common\Exception\RuntimeException;
 use Guzzle\Http\ClientInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,8 +50,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @see RequestInterface
  * @see AbstractResponse
  */
-abstract class AbstractRequest extends Currencyable implements RequestInterface
+abstract class AbstractRequest implements RequestInterface
 {
+    use CurrencyableTrait {
+        setParameter as setParameterTrait;
+    };
+
     /**
      * The request client.
      *
@@ -83,7 +88,7 @@ abstract class AbstractRequest extends Currencyable implements RequestInterface
         $this->httpClient = $httpClient;
         $this->httpRequest = $httpRequestStack->getCurrentRequest();
 
-        parent::__construct();
+        $this->initializeParameters();
     }
 
     /**
@@ -102,7 +107,7 @@ abstract class AbstractRequest extends Currencyable implements RequestInterface
             throw new RuntimeException('Request cannot be modified after it has been sent!');
         }
 
-        return parent::initialize($parameters);
+        return $this->initializeParameters($parameters);
     }
 
     /**
@@ -119,7 +124,7 @@ abstract class AbstractRequest extends Currencyable implements RequestInterface
             throw new RuntimeException('Request cannot be modified after it has been sent!');
         }
 
-        return parent::setParameter($key, $value);
+        return $this->setParameterTrait($key, $value);
     }
 
     /**

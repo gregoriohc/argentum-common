@@ -1,4 +1,5 @@
-<?php namespace Argentum\Common;
+<?php
+namespace Argentum\Common;
 
 use Argentum\Common\Document\AbstractDocument;
 use Argentum\Common\Exception\RuntimeException;

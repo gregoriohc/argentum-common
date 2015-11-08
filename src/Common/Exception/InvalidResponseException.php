@@ -1,4 +1,5 @@
-<?php namespace Argentum\Common\Exception;
+<?php
+namespace Argentum\Common\Exception;
 
 /**
  * Invalid Response exception.
