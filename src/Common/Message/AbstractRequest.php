@@ -54,7 +54,7 @@ abstract class AbstractRequest implements RequestInterface
 {
     use CurrencyableTrait {
         setParameter as setParameterTrait;
-    };
+    }
 
     /**
      * The request client.
