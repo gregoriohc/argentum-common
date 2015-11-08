@@ -57,9 +57,11 @@ abstract class AbstractDocument
     {
         $this->addParametersRequired(array('type'));
 
-        if (!isset($parameters['content'])) $parameters['content'] = [];
+        if (!isset($parameters['content'])) {
+            $parameters['content'] = [];
+        }
 
-        $this->templateEngine = new TemplateEngine(__DIR__ . '/views');
+        $this->templateEngine = new TemplateEngine(__DIR__.'/views');
 
         $this->initializeParameters($parameters);
     }
@@ -129,7 +131,9 @@ abstract class AbstractDocument
      */
     public function addTemplatesFolder($name, $path)
     {
-        if (is_dir($path)) $this->templateEngine->addFolder($name, $path);
+        if (is_dir($path)) {
+            $this->templateEngine->addFolder($name, $path);
+        }
     }
 
     /**
@@ -142,10 +146,10 @@ abstract class AbstractDocument
     {
         $this->validate();
 
-        $view = $this->getType() . '-' . $format;
+        $view = $this->getType().'-'.$format;
 
         if (null !== $folderName) {
-            $view = $folderName . '::' . $view;
+            $view = $folderName.'::'.$view;
         } else {
             if ($this->templateEngine->getFolders()->exists('custom') && $this->templateEngine->exists('custom::'.$view)) {
                 $view = 'custom::'.$view;

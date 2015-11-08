@@ -133,7 +133,9 @@ class Ticket extends AbstractDocument
      */
     public function setFrom($value)
     {
-        if (is_array($value)) $value = new Person($value);
+        if (is_array($value)) {
+            $value = new Person($value);
+        }
         return $this->setParameter('from', $value);
     }
 
@@ -157,7 +159,7 @@ class Ticket extends AbstractDocument
     {
         if (is_array($value)) {
             $bag = new Bag();
-            foreach($value as $itemParameters) {
+            foreach ($value as $itemParameters) {
                 $bag->add(new Item($itemParameters));
             }
             $value = $bag;

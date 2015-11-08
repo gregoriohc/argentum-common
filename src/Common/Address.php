@@ -228,7 +228,9 @@ class Address
 
         foreach ($parts as $part) {
             $value = $this->parameters->get($part);
-            if (!empty($value)) $address[] = $value;
+            if (!empty($value)) {
+                $address[] = $value;
+            }
         }
 
         return implode(', ', $address);

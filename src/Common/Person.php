@@ -251,7 +251,9 @@ class Person
      */
     public function setAddress($value)
     {
-        if (is_array($value)) $value = new Address($value);
+        if (is_array($value)) {
+            $value = new Address($value);
+        }
         return $this->setParameter('address', $value);
     }
 
