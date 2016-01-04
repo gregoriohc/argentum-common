@@ -2,9 +2,9 @@
 namespace Argentum\Common\Message;
 
 use Argentum\Common\CurrencyableTrait;
+use Argentum\Common\EventableTrait;
 use Argentum\Common\Exception\RuntimeException;
 use Guzzle\Http\ClientInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -55,6 +55,8 @@ abstract class AbstractRequest implements RequestInterface
     use CurrencyableTrait {
         setParameter as setParameterTrait;
     }
+
+    use EventableTrait;
 
     /**
      * The request client.
