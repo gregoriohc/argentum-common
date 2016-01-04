@@ -1,7 +1,9 @@
 <?php namespace Argentum;
 
 use Argentum\Common\GatewayFactory;
-use Argentum\Common\DocumentFactory;
+use Argentum\Common\GatewayInterface;
+use Guzzle\Http\ClientInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Argentum class
@@ -41,7 +43,7 @@ use Argentum\Common\DocumentFactory;
  * @method static array  find()
  * @method static array  getSupportedGateways()
  * @codingStandardsIgnoreStart
- * @method static \Argentum\Common\GatewayInterface create(string $class, \Guzzle\Http\ClientInterface $httpClient = null, \Symfony\Component\HttpFoundation\Request $httpRequest = null)
+ * @method static GatewayInterface create(string $class, ClientInterface $httpClient = null, Request $httpRequest = null)
  * @codingStandardsIgnoreEnd
  *
  * @see Omnipay\Common\GatewayFactory
@@ -65,11 +67,11 @@ class Argentum
      */
     public static function getFactory()
     {
-        if (is_null(static::$factory)) {
-            static::$factory = new GatewayFactory;
+        if (is_null(self::$factory)) {
+            self::$factory = new GatewayFactory;
         }
 
-        return static::$factory;
+        return self::$factory;
     }
 
     /**
@@ -79,7 +81,7 @@ class Argentum
      */
     public static function setFactory(GatewayFactory $factory = null)
     {
-        static::$factory = $factory;
+        self::$factory = $factory;
     }
 
     /**
@@ -105,7 +107,7 @@ class Argentum
      */
     public static function __callStatic($method, $parameters)
     {
-        $factory = static::getFactory();
+        $factory = self::getFactory();
 
         return call_user_func_array(array($factory, $method), $parameters);
     }

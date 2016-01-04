@@ -1,11 +1,12 @@
-<?php namespace Argentum\Common;
+<?php
+namespace Argentum\Common;
 
 use Argentum\Common\Exception\InvalidParametrizedException;
 
 /**
- * Parametrized class
+ * Parametrized trait
  *
- * This class defines and abstracts all of the parametrized objects used
+ * This trait defines and abstracts all of the parametrized objects used
  * throughout the Argentum system.
  *
  * Example:
@@ -21,7 +22,7 @@ use Argentum\Common\Exception\InvalidParametrizedException;
  *   $object = new Parametrized($parameters);
  * </code>
  */
-abstract class Parametrized
+trait ParametrizedTrait
 {
     /**
      * Internal storage of all of the parameters.
@@ -38,24 +39,14 @@ abstract class Parametrized
     protected $parametersRequired = [];
 
     /**
-     * Create a new Parametrized object using the specified parameters
-     *
-     * @param array $parameters An array of parameters to set on the new object
-     */
-    public function __construct($parameters = array())
-    {
-        $this->initialize($parameters);
-    }
-
-    /**
      * Initialize the object with parameters.
      *
      * If any unknown parameters passed, they will be ignored.
      *
      * @param array $parameters An associative array of parameters
-     * @return Parametrized provides a fluent interface.
+     * @return self provides a fluent interface.
      */
-    public function initialize(array $parameters = array())
+    public function initializeParameters($parameters = array())
     {
         $this->parameters = new ParameterContainer;
 
@@ -101,7 +92,7 @@ abstract class Parametrized
      *
      * @param string $key Parameter key
      * @param mixed $value Parameter value
-     * @return Parametrized provides a fluent interface.
+     * @return self provides a fluent interface.
      */
     protected function setParameter($key, $value)
     {
@@ -148,11 +139,17 @@ abstract class Parametrized
      *
      * Generally if you want to validate the parametrized object yourself with custom error
      * messages, you should use your framework's validation library, not this method.
+     */
+    public function validate() {
+        $this->validateRequiredParameters();
+    }
+
+    /**
+     * Validate required parameters
      *
      * @throws InvalidParametrizedException
-     * @return void
      */
-    public function validate()
+    public function validateRequiredParameters()
     {
         foreach ($this->parametersRequired as $key) {
             if (!$this->hasParameter($key)) {
@@ -162,6 +159,8 @@ abstract class Parametrized
     }
 
     /**
+     * Get an array of the parameters
+     *
      * @return array
      */
     public function toArray() {

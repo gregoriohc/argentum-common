@@ -1,4 +1,5 @@
-<?php namespace Argentum\Common\Exception;
+<?php
+namespace Argentum\Common\Exception;
 
 /**
  * Argentum Exception marker interface

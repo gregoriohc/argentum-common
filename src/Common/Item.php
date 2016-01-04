@@ -1,4 +1,5 @@
-<?php namespace Argentum\Common;
+<?php
+namespace Argentum\Common;
 
 /**
  * Cart Item
@@ -29,19 +30,22 @@
  * * quantity
  * * unit
  * * price
+ * * taxes
  */
-class Item extends Parametrized
+class Item
 {
+    use ParametrizedTrait;
+
     /**
      * Create a new Item object using the specified parameters
      *
      * @param array $parameters An array of parameters to set on the new object
      */
-    public function __construct($parameters = null)
+    public function __construct($parameters = array())
     {
         $this->addParametersRequired(array('name', 'price'));
 
-        parent::__construct($parameters);
+        $this->initializeParameters($parameters);
     }
 
 
@@ -148,5 +152,44 @@ class Item extends Parametrized
     public function setPrice($value)
     {
         return $this->setParameter('price', $value);
+    }
+
+    /**
+     * Get the item taxes
+     *
+     * @return Bag
+     */
+    public function getTaxes()
+    {
+        return $this->getParameter('taxes');
+    }
+
+    /**
+     * Set the item taxes
+     *
+     * @param Bag $value
+     * @return Item
+     */
+    public function setTaxes($value)
+    {
+        if (is_array($value)) {
+            $bag = new Bag();
+            foreach ($value as $taxParameters) {
+                $bag->add(new Tax($taxParameters));
+            }
+            $value = $bag;
+        }
+
+        return $this->setParameter('taxes', $value);
+    }
+
+    /**
+     * Get the item amount
+     *
+     * @return float
+     */
+    public function getAmount()
+    {
+        return $this->getPrice() * $this->getQuantity();
     }
 }

@@ -1,9 +1,10 @@
-<?php namespace Argentum\Common;
+<?php
+namespace Argentum\Common;
 
 use Guzzle\Http\ClientInterface;
 use Argentum\Common\Exception\RuntimeException;
 use ReflectionClass;
-use Symfony\Component\HttpFoundation\Request as HttpRequest;
+use Symfony\Component\HttpFoundation\RequestStack as HttpRequestStack;
 
 /**
  * Argentum Gateway Factory class
@@ -87,13 +88,13 @@ class GatewayFactory
     /**
      * Create a new gateway instance
      *
-     * @param string               $class       Gateway name
-     * @param ClientInterface|null $httpClient  A Guzzle HTTP Client implementation
-     * @param HttpRequest|null     $httpRequest A Symfony HTTP Request implementation
-     * @throws RuntimeException                 If no such gateway is found
-     * @return GatewayInterface                 An object of class $class is created and returned
+     * @param string                $class              Gateway name
+     * @param ClientInterface|null  $httpClient         A Guzzle HTTP Client implementation
+     * @param HttpRequestStack|null $httpRequestStack   A Symfony HTTP Request stack
+     * @throws RuntimeException                         If no such gateway is found
+     * @return GatewayInterface                         An object of class $class is created and returned
      */
-    public function create($class, ClientInterface $httpClient = null, HttpRequest $httpRequest = null)
+    public function create($class, ClientInterface $httpClient = null, HttpRequestStack $httpRequestStack = null)
     {
         $class = Helper::getGatewayClassName($class);
 
@@ -102,7 +103,7 @@ class GatewayFactory
         }
 
         /** @var AbstractGateway $gateway */
-        $gateway = new $class($httpClient, $httpRequest);
+        $gateway = new $class($httpClient, $httpRequestStack);
         $gatewayClassInfo = new ReflectionClass($gateway);
         $gateway->setPath(dirname($gatewayClassInfo->getFileName()));
 

@@ -1,7 +1,8 @@
-<?php namespace Argentum\Common\Document;
+<?php
+namespace Argentum\Common\Document;
 
 use Argentum\Common\Exception\InvalidDocumentException;
-use Argentum\Common\Parametrized;
+use Argentum\Common\ParametrizedTrait;
 use League\Plates\Engine as TemplateEngine;
 
 /**
@@ -41,8 +42,10 @@ use League\Plates\Engine as TemplateEngine;
  *
  * If any unknown parameters are passed in, they will be ignored.  No error is thrown.
  */
-abstract class AbstractDocument extends Parametrized implements DocumentInterface
+abstract class AbstractDocument
 {
+    use ParametrizedTrait;
+
     private $templateEngine;
 
     /**
@@ -54,9 +57,13 @@ abstract class AbstractDocument extends Parametrized implements DocumentInterfac
     {
         $this->addParametersRequired(array('type'));
 
-        $this->templateEngine = new TemplateEngine(__DIR__ . '/views');
+        if (!isset($parameters['content'])) {
+            $parameters['content'] = [];
+        }
 
-        parent::__construct($parameters);
+        $this->templateEngine = new TemplateEngine(__DIR__.'/views');
+
+        $this->initializeParameters($parameters);
     }
 
     /**
@@ -67,7 +74,7 @@ abstract class AbstractDocument extends Parametrized implements DocumentInterfac
      */
     public function validate()
     {
-        parent::validate();
+        $this->validateRequiredParameters();
 
         if (!is_string($this->getType())) {
             throw new InvalidDocumentException("The type parameter must be a string");
@@ -124,7 +131,9 @@ abstract class AbstractDocument extends Parametrized implements DocumentInterfac
      */
     public function addTemplatesFolder($name, $path)
     {
-        if (is_dir($path)) $this->templateEngine->addFolder($name, $path);
+        if (is_dir($path)) {
+            $this->templateEngine->addFolder($name, $path);
+        }
     }
 
     /**
@@ -137,10 +146,10 @@ abstract class AbstractDocument extends Parametrized implements DocumentInterfac
     {
         $this->validate();
 
-        $view = $this->getType() . '-' . $format;
+        $view = $this->getType().'-'.$format;
 
         if (null !== $folderName) {
-            $view = $folderName . '::' . $view;
+            $view = $folderName.'::'.$view;
         } else {
             if ($this->templateEngine->getFolders()->exists('custom') && $this->templateEngine->exists('custom::'.$view)) {
                 $view = 'custom::'.$view;
