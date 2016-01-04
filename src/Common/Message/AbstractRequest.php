@@ -2,9 +2,11 @@
 namespace Argentum\Common\Message;
 
 use Argentum\Common\CurrencyableTrait;
+use Argentum\Common\Event;
 use Argentum\Common\EventableTrait;
 use Argentum\Common\Exception\RuntimeException;
 use Guzzle\Http\ClientInterface;
+use ReflectionClass;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -242,8 +244,15 @@ abstract class AbstractRequest implements RequestInterface
     public function send()
     {
         $data = $this->getData();
+        $reflect = new ReflectionClass($this);
 
-        return $this->sendData($data);
+        $this->trigger('before' . $reflect->getShortName(), new Event($this));
+        
+        $response = $this->sendData($data);
+
+        $this->trigger('after' . $reflect->getShortName(), new Event($this));
+
+        return $response;
     }
 
     /**
