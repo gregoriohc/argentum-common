@@ -1,5 +1,6 @@
 <?php namespace Argentum\Common\Message;
 
+use Argentum\Common\EventableTrait;
 use Argentum\Common\Parametrized;
 use Argentum\Common\Invoice;
 use Argentum\Common\Currency;
@@ -55,6 +56,8 @@ use InvalidArgumentException;
  */
 abstract class AbstractRequest extends Parametrized implements RequestInterface
 {
+    use EventableTrait;
+
     /**
      * The request client.
      *
