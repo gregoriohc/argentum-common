@@ -50,10 +50,10 @@ class Ticket extends AbstractDocument
 
         $this->addParametersRequired(array('from'));
 
-        // Initialize default parameters
         $this->setType('ticket');
-        $this->setDate(new \DateTime());
-        $this->setItems([]);
+
+        // Initialize default parameters
+        if (empty($this->getDate())) $this->setDate(new \DateTime());
     }
 
     /**

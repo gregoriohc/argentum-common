@@ -50,7 +50,6 @@ class Invoice extends Ticket
 
         $this->addParametersRequired(array('to'));
 
-        // Initialize default parameters
         $this->setType('invoice');
     }
 
