@@ -116,6 +116,8 @@ class Helper
      */
     public static function getDocumentClassName($shortName, $gatewayClass)
     {
+        $shortName = ucfirst($shortName);
+        
         // replace underscores with namespace marker, PSR-0 style
         $shortName = str_replace('_', '\\', $shortName);
 
