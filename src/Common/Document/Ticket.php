@@ -2,6 +2,7 @@
 namespace Argentum\Common\Document;
 
 use Argentum\Common\Bag;
+use Argentum\Common\Discount;
 use Argentum\Common\Item;
 use Argentum\Common\Tax;
 use Argentum\Common\Exception\InvalidDocumentException;
@@ -33,6 +34,7 @@ use Argentum\Common\Person;
  * * date
  * * from
  * * items
+ * * discounts
  * * currency
  *
  * If any unknown parameters are passed in, they will be ignored.  No error is thrown.
@@ -214,6 +216,34 @@ class Ticket extends AbstractDocument
     }
 
     /**
+     * Get invoice discounts
+     *
+     * @return Bag
+     */
+    public function getDiscounts()
+    {
+        return $this->getParameter('discounts');
+    }
+
+    /**
+     * Set invoice discounts
+     *
+     * @param array|Bag $value Parameter value
+     * @return Invoice provides a fluent interface.
+     */
+    public function setDiscounts($value)
+    {
+        if (is_array($value)) {
+            $bag = new Bag();
+            foreach ($value as $discountParameters) {
+                $bag->add(new Discount($discountParameters));
+            }
+            $value = $bag;
+        }
+        return $this->setParameter('discounts', $value);
+    }
+
+    /**
      * Get invoice currency
      *
      * @return string
@@ -270,12 +300,29 @@ class Ticket extends AbstractDocument
     }
 
     /**
+     * Get ticket discounts amount
+     *
+     * @return float
+     */
+    public function getDiscountsAmount()
+    {
+        $discountsAmount = 0;
+
+        /** @var \Argentum\Common\Discount $discount */
+        foreach ($this->getDiscounts() as $discount) {
+            $discountsAmount += $discount->getAmount();
+        }
+
+        return $discountsAmount;
+    }
+
+    /**
      * Get invoice total
      *
      * @return float
      */
     public function getTotal()
     {
-        return $this->getSubtotal() + $this->getTaxesAmount();
+        return $this->getSubtotal() - $this->getDiscountsAmount() + $this->getTaxesAmount();
     }
 }
