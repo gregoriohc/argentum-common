@@ -2,7 +2,7 @@
 
 use Argentum\Common\GatewayFactory;
 use Argentum\Common\GatewayInterface;
-use Guzzle\Http\ClientInterface;
+use GuzzleHttp\ClientInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

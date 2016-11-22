@@ -3,8 +3,8 @@ namespace Argentum\Common;
 
 use Argentum\Common\Document\AbstractDocument;
 use Argentum\Common\Exception\RuntimeException;
-use Guzzle\Http\ClientInterface;
-use Guzzle\Http\Client as HttpClient;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Client as HttpClient;
 use Symfony\Component\HttpFoundation\RequestStack as HttpRequestStack;
 
 /**
@@ -45,7 +45,7 @@ abstract class AbstractGateway implements GatewayInterface
     protected $parameters;
 
     /**
-     * @var \Guzzle\Http\ClientInterface
+     * @var ClientInterface
      */
     protected $httpClient;
 
@@ -284,12 +284,9 @@ abstract class AbstractGateway implements GatewayInterface
      */
     protected function getDefaultHttpClient()
     {
-        return new HttpClient(
-            '',
-            array(
-                'curl.options' => array(CURLOPT_CONNECTTIMEOUT => 60),
-            )
-        );
+        return new HttpClient([
+            'timeout' => 60,
+        ]);
     }
 
     /**
