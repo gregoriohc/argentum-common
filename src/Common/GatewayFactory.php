@@ -1,7 +1,7 @@
 <?php
 namespace Argentum\Common;
 
-use Guzzle\Http\ClientInterface;
+use GuzzleHttp\ClientInterface;
 use Argentum\Common\Exception\RuntimeException;
 use ReflectionClass;
 use Symfony\Component\HttpFoundation\RequestStack as HttpRequestStack;

@@ -5,7 +5,7 @@ use Argentum\Common\CurrencyableTrait;
 use Argentum\Common\Event;
 use Argentum\Common\EventableTrait;
 use Argentum\Common\Exception\RuntimeException;
-use Guzzle\Http\ClientInterface;
+use GuzzleHttp\ClientInterface;
 use ReflectionClass;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -63,7 +63,7 @@ abstract class AbstractRequest implements RequestInterface
     /**
      * The request client.
      *
-     * @var \Guzzle\Http\ClientInterface
+     * @var ClientInterface
      */
     protected $httpClient;
 
