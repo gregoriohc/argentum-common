@@ -45,6 +45,6 @@ class CreditNote extends Invoice
     {
         parent::__construct($parameters);
 
-        $this->setType('credit_note');
+        $this->setType('creditNote');
     }
 }
