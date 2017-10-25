@@ -289,11 +289,10 @@ class Ticket extends AbstractDocument
     public function getTaxesAmount()
     {
         $taxesAmount = 0;
-        $subtotal = $this->getSubtotal();
 
         /** @var \Argentum\Common\Tax $tax */
         foreach ($this->getTaxes() as $tax) {
-            $taxesAmount += $tax->getAmount($subtotal);
+            $taxesAmount += $tax->getAmount($tax->getBaseAmount());
         }
 
         return $taxesAmount;
