@@ -150,6 +150,27 @@ class Person
     }
 
     /**
+     * Get person fiscal regime
+     *
+     * @return string
+     */
+    public function getFiscalRegime()
+    {
+        return $this->getParameter('fiscal_regime');
+    }
+
+    /**
+     * Set person fiscal regime
+     *
+     * @param string $value Parameter value
+     * @return Person provides a fluent interface.
+     */
+    public function setFiscalRegime($value)
+    {
+        return $this->setParameter('fiscal_regime', $value);
+    }
+
+    /**
      * Get person name
      *
      * @return string
