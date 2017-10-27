@@ -134,6 +134,27 @@ class Item
     }
 
     /**
+     * Get the item unit code
+     *
+     * @return string
+     */
+    public function getUnitCode()
+    {
+        return $this->getParameter('unit_code');
+    }
+
+    /**
+     * Set the item unit code
+     *
+     * @param string $value
+     * @return Item
+     */
+    public function setUnitCode($value)
+    {
+        return $this->setParameter('unit_code', $value);
+    }
+
+    /**
      * Get the item price
      *
      * @return float
