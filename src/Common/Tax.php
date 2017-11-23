@@ -114,6 +114,27 @@ class Tax
     }
 
     /**
+     * Get tax rate
+     *
+     * @return float
+     */
+    public function getRateType()
+    {
+        return $this->getParameter('rate_type');
+    }
+
+    /**
+     * Set tax rate
+     *
+     * @param float $value Parameter value
+     * @return Tax provides a fluent interface.
+     */
+    public function setRateType($value)
+    {
+        return $this->setParameter('rate_type', $value);
+    }
+
+    /**
      * Get tax base amount
      *
      * @return float

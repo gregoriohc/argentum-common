@@ -1,8 +1,10 @@
 <?php
 namespace Argentum\Common\Document;
 
+use Argentum\Common\Bag;
 use Argentum\Common\Exception\InvalidDocumentException;
 use Argentum\Common\ParametrizedTrait;
+use Argentum\Common\Relation;
 use League\Plates\Engine as TemplateEngine;
 
 /**
@@ -121,6 +123,82 @@ abstract class AbstractDocument
     public function setContent($value)
     {
         return $this->setParameter('content', $value);
+    }
+
+    /**
+     * Get document relations
+     *
+     * @return Bag
+     */
+    public function getRelations()
+    {
+        $bag = $this->getParameter('relations');
+
+        if (!($bag instanceof Bag)) {
+            $bag = new Bag();
+        }
+
+        $this->setParameter('relations', $bag);
+
+        return $bag;
+    }
+
+    /**
+     * Add document relation
+     *
+     * @param array $parameters Parameters value
+     * @return AbstractDocument provides a fluent interface.
+     */
+    public function addRelation($parameters)
+    {
+        $bag = $this->getParameter('relations');
+
+        if (!($bag instanceof Bag)) {
+            $bag = new Bag();
+        }
+
+        $bag->add(new Relation($parameters));
+
+        return $this->setParameter('relations', $bag);
+    }
+
+    /**
+     * Set invoice relations
+     *
+     * @param array|Bag $value Parameter value
+     * @return AbstractDocument provides a fluent interface.
+     */
+    public function setRelations($value)
+    {
+        if (is_array($value)) {
+            $bag = new Bag();
+            foreach ($value as $itemParameters) {
+                $bag->add(new Relation($itemParameters));
+            }
+            $value = $bag;
+        }
+        return $this->setParameter('relations', $value);
+    }
+
+    /**
+     * Get document extra data
+     *
+     * @return mixed
+     */
+    public function getExtra()
+    {
+        return $this->getParameter('extra');
+    }
+
+    /**
+     * Set document extra data
+     *
+     * @param mixed $value Parameter value
+     * @return AbstractDocument provides a fluent interface.
+     */
+    public function setExtra($value)
+    {
+        return $this->setParameter('extra', $value);
     }
 
     /**
