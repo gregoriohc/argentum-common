@@ -25,11 +25,14 @@ namespace Argentum\Common;
  * The full list of item attributes that may be set via the parameter to
  * *new* is as follows:
  *
+ * * code
  * * name
  * * description
  * * quantity
  * * unit
+ * * unit_code
  * * price
+ * * discount
  * * taxes
  */
 class Item
@@ -48,6 +51,26 @@ class Item
         $this->initializeParameters($parameters);
     }
 
+    /**
+     * Get the item code
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->getParameter('code');
+    }
+
+    /**
+     * Set the item code
+     *
+     * @param string $value
+     * @return Item
+     */
+    public function setCode($value)
+    {
+        return $this->setParameter('code', $value);
+    }
 
     /**
      * Get the item name
@@ -176,6 +199,27 @@ class Item
     }
 
     /**
+     * Get the item discount
+     *
+     * @return float
+     */
+    public function getDiscount()
+    {
+        return $this->getParameter('discount');
+    }
+
+    /**
+     * Set the item discount
+     *
+     * @param float $value
+     * @return Item
+     */
+    public function setDiscount($value)
+    {
+        return $this->setParameter('discount', $value);
+    }
+
+    /**
      * Get the item taxes
      *
      * @return Bag
@@ -212,5 +256,15 @@ class Item
     public function getAmount()
     {
         return $this->getPrice() * $this->getQuantity();
+    }
+
+    /**
+     * Get the item base amount for tax
+     *
+     * @return float
+     */
+    public function getBaseAmountForTax()
+    {
+        return $this->getAmount() - $this->getDiscount();
     }
 }

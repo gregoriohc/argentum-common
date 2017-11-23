@@ -34,6 +34,7 @@ use Argentum\Common\Person;
  * * date
  * * from
  * * items
+ * * taxes
  * * discounts
  * * currency
  *
@@ -183,9 +184,9 @@ class Ticket extends AbstractDocument
             foreach ($item->getTaxes() as $tax) {
                 if (!isset($taxesList[$tax->getType()])) {
                     $taxesList[$tax->getType()] = clone($tax);
-                    $tax->setBaseAmount(0);
+                    $taxesList[$tax->getType()]->setBaseAmount(0);
                 }
-                $tax->addBaseAmount($item->getAmount());
+                $taxesList[$tax->getType()]->addBaseAmount($item->getAmount() - $item->getDiscount());
             }
         }
 
@@ -244,6 +245,29 @@ class Ticket extends AbstractDocument
     }
 
     /**
+     * Get discount
+     *
+     * @return float
+     * @deprecated
+     */
+    public function getDiscount()
+    {
+        return $this->getDiscountsAmount();
+    }
+
+    /**
+     * Set discount
+     *
+     * @param float $value Parameter value
+     * @return Invoice provides a fluent interface.
+     * @deprecated
+     */
+    public function setDiscount($value)
+    {
+        return $this->setDiscounts(['name' => 'Discount', 'amount' => $value]);
+    }
+
+    /**
      * Get invoice currency
      *
      * @return string
@@ -262,6 +286,132 @@ class Ticket extends AbstractDocument
     public function setCurrency($value)
     {
         return $this->setParameter('currency', $value);
+    }
+
+    /**
+     * Get payment type
+     *
+     * @return string
+     */
+    public function getPaymentType()
+    {
+        return $this->getParameter('payment_type');
+    }
+
+    /**
+     * Set payment type
+     *
+     * @param string $value Parameter value
+     * @return Invoice provides a fluent interface.
+     */
+    public function setPaymentType($value)
+    {
+        return $this->setParameter('payment_type', $value);
+    }
+
+    /**
+     * Get payment method
+     *
+     * @return string
+     */
+    public function getPaymentMethod()
+    {
+        return $this->getParameter('payment_method');
+    }
+
+    /**
+     * Set payment method
+     *
+     * @param string $value Parameter value
+     * @return Invoice provides a fluent interface.
+     */
+    public function setPaymentMethod($value)
+    {
+        return $this->setParameter('payment_method', $value);
+    }
+
+    /**
+     * Get payment conditions
+     *
+     * @return string
+     */
+    public function getPaymentConditions()
+    {
+        return $this->getParameter('payment_conditions');
+    }
+
+    /**
+     * Set payment conditions
+     *
+     * @param string $value Parameter value
+     * @return Invoice provides a fluent interface.
+     */
+    public function setPaymentConditions($value)
+    {
+        return $this->setParameter('payment_conditions', $value);
+    }
+
+    /**
+     * Get payment account
+     *
+     * @return string
+     */
+    public function getPaymentAccount()
+    {
+        return $this->getParameter('payment_account');
+    }
+
+    /**
+     * Set payment account
+     *
+     * @param string $value Parameter value
+     * @return Invoice provides a fluent interface.
+     */
+    public function setPaymentAccount($value)
+    {
+        return $this->setParameter('payment_account', $value);
+    }
+
+    /**
+     * Get scheme
+     *
+     * @return string
+     */
+    public function getScheme()
+    {
+        return $this->getParameter('scheme');
+    }
+
+    /**
+     * Set scheme
+     *
+     * @param string $value Parameter value
+     * @return Invoice provides a fluent interface.
+     */
+    public function setScheme($value)
+    {
+        return $this->setParameter('scheme', $value);
+    }
+
+    /**
+     * Get receiver document usage
+     *
+     * @return string
+     */
+    public function getUsage()
+    {
+        return $this->getParameter('usage');
+    }
+
+    /**
+     * Set receiver document usage
+     *
+     * @param string $value Parameter value
+     * @return Invoice provides a fluent interface.
+     */
+    public function setUsage($value)
+    {
+        return $this->setParameter('usage', $value);
     }
 
     /**
@@ -307,9 +457,18 @@ class Ticket extends AbstractDocument
     {
         $discountsAmount = 0;
 
-        /** @var \Argentum\Common\Discount $discount */
-        foreach ($this->getDiscounts() as $discount) {
-            $discountsAmount += $discount->getAmount();
+        if (count($this->getDiscounts())) {
+            // Discount amount based on global ticket discounts
+            foreach ($this->getDiscounts() as $discount) {
+                /** @var \Argentum\Common\Discount $discount */
+                $discountsAmount += $discount->getAmount();
+            }
+        } else {
+            // Discount amount based on items discounts
+            foreach ($this->getItems() as $item) {
+                /** @var \Argentum\Common\Item $item */
+                $discountsAmount += $item->getDiscount();
+            }
         }
 
         return $discountsAmount;

@@ -32,6 +32,7 @@ use Argentum\Common\Exception\InvalidPersonException;
  *
  * * id
  * * type
+ * * fiscal_regime
  * * name
  * * email
  * * phone
