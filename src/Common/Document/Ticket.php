@@ -182,11 +182,21 @@ class Ticket extends AbstractDocument
         foreach ($this->getItems() as $item) {
             /** @var Tax $tax */
             foreach ($item->getTaxes() as $tax) {
-                if (!isset($taxesList[$tax->getType()])) {
-                    $taxesList[$tax->getType()] = clone($tax);
-                    $taxesList[$tax->getType()]->setBaseAmount(0);
+                $taxKey = md5($tax->getName() . $tax->getType() . $tax->getRate());
+                if (!isset($taxesList[$taxKey])) {
+                    $newTax = new Tax([
+                        'type' => $tax->getType(),
+                        'name' => $tax->getName(),
+                        'rate' => $tax->getRate(),
+                        'rate_type' => $tax->getRateType(),
+                    ]);
+                    $newTax->setBaseAmount(0);
+                    $newTax->setFixedAmount(0);
+                    $taxesList[$taxKey] = $newTax;
                 }
-                $taxesList[$tax->getType()]->addBaseAmount($item->getAmount() - $item->getDiscount());
+                $baseAmount = $item->getAmount() - $item->getDiscount();
+                $taxesList[$taxKey]->addBaseAmount($baseAmount);
+                $taxesList[$taxKey]->addFixedAmount(round($baseAmount * $taxesList[$taxKey]->getRate() / 100, 2));
             }
         }
 
@@ -412,6 +422,27 @@ class Ticket extends AbstractDocument
     public function setUsage($value)
     {
         return $this->setParameter('usage', $value);
+    }
+
+    /**
+     * Get invoice serie
+     *
+     * @return string
+     */
+    public function getSerie()
+    {
+        return $this->getParameter('serie');
+    }
+
+    /**
+     * Set invoice serie
+     *
+     * @param string $value Parameter value
+     * @return Invoice provides a fluent interface.
+     */
+    public function setSerie($value)
+    {
+        return $this->setParameter('serie', $value);
     }
 
     /**
