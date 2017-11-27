@@ -26,6 +26,7 @@ namespace Argentum\Common;
  * * name
  * * rate
  * * baseAmount
+ * * fixedAmount
  */
 class Tax
 {
@@ -167,6 +168,38 @@ class Tax
     }
 
     /**
+     * Get tax fixed amount
+     *
+     * @return float
+     */
+    public function getFixedAmount()
+    {
+        return $this->getParameter('fixedAmount');
+    }
+
+    /**
+     * Set tax fixed amount
+     *
+     * @param float $value Parameter value
+     * @return Tax provides a fluent interface.
+     */
+    public function setFixedAmount($value)
+    {
+        return $this->setParameter('fixedAmount', $value);
+    }
+
+    /**
+     * Add tax fixed amount
+     *
+     * @param float $value Parameter value
+     * @return Tax provides a fluent interface.
+     */
+    public function addFixedAmount($value)
+    {
+        return $this->setParameter('fixedAmount', $this->getFixedAmount() + $value);
+    }
+
+    /**
      * Get tax amount from a given base amount
      *
      * @param float $baseAmount
@@ -174,6 +207,10 @@ class Tax
      */
     public function getAmount($baseAmount = null)
     {
+        if (is_numeric($this->getFixedAmount())) {
+            return $this->getFixedAmount();
+        }
+
         if (null === $baseAmount) {
             $baseAmount = $this->getBaseAmount();
         }
